@@ -1,0 +1,89 @@
+html, body, div, textarea, button, h1, h2, h3, ul, textarea{
+  margin: 0;
+  border: 0;
+  padding: 0;
+  box-sizing: inherit;
+  font: inherit;
+  text-decoration: none;
+  text-align: inherit;
+  color: inherit;
+  background: transparent;
+  visibility: inherit;
+
+  font-family: 'Questrial', sans-serif;
+  font-weight: 400;
+  color: #324A5E;
+}
+
+li {
+  margin-left: 20px;
+}
+
+body {
+  width: 450px;
+  background: #E6E9EE;
+  margin-bottom: 25px;
+
+}
+
+h1 {
+  font-size: 35px;
+  font-weight: 400;
+  text-align: center;
+  font-family: 'Lobster', cursive;
+}
+
+h2 {
+  font-family: 'Lobster', cursive;
+  font-size: 25px;
+  text-align: left;
+}
+
+h3 {
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.header-container {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.header-container img {
+  display: block;
+  margin: 0 auto;
+}
+
+
+#sub {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 200;
+}
+
+.li-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#extract-description{
+  outline: 0;
+  width: 60%;
+  padding: 10px;
+  border: none;
+  box-shadow: none;
+  box-sizing: border-box;
+  font-size: 15px;
+  font-weight: 400;
+  margin-top: 10px;
+  color: white;
+  background-color: #fd9078;
+  text-align: center;
+  box-shadow: 0 5px #c1bab8;
+  cursor: pointer;
+  border-radius: 20px;
+}
