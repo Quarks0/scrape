@@ -66,7 +66,7 @@
 	    } else {
 	      console.log('returned from getProfile');
 	      console.log(message.contact);
-	      contacts.push(merge(message.contact, { vertical: vertical, linkedInAd: adURL }));
+	      contacts.push(merge(message.contact, { vertical: vertical, ad: adURL }));
 	      console.log(contacts);
 	      if (contacts.length === profiles.length) {
 	        debugger;
@@ -87,7 +87,7 @@
 	//content scripts - load jquery then run pullDescription
 	function getProfiles() {
 	  chrome.tabs.executeScript({ file: "./lib/jquery-3.1.1.min.js" }, function () {
-	    chrome.tabs.executeScript({ file: "./lib/pullInfoFromLinkedIn.js" });
+	    chrome.tabs.executeScript({ file: "./lib/pullInfoFromPage.js" });
 	  });
 	}
 	
@@ -95,7 +95,7 @@
 	  //create blank tab, executeScript, closetab
 	  chrome.tabs.create({ url: url, active: false }, function (tab) {
 	    chrome.tabs.executeScript(tab.id, { file: "./lib/jquery-3.1.1.min.js" }, function () {
-	      chrome.tabs.executeScript(tab.id, { file: "./lib/pullInfoFromLinkedInProfile.js" }, function (tab) {
+	      chrome.tabs.executeScript(tab.id, { file: "./lib/pullInfoFromPageProfile.js" }, function (tab) {
 	        return chrome.tabs.remove(tab.id);
 	      });
 	    });
@@ -109,7 +109,7 @@
 	
 	  var cToK = columnToKeyMap();
 	
-	  var headers = ['LinkedIn Profile', 'First Name', 'Last Name', 'Email', 'Company', 'Title', 'Ad', 'Vertical'];
+	  var headers = ['Profile', 'First Name', 'Last Name', 'Email', 'Company', 'Title', 'Ad', 'Vertical'];
 	  var result = headers.join(",") + "\n";
 	  for (var i = 0; i < contacts.length; i++) {
 	    var res = [];
@@ -123,13 +123,13 @@
 	
 	function columnToKeyMap() {
 	  return {
-	    'LinkedIn Profile': 'profile_url',
+	    'Profile': 'profile_url',
 	    'First Name': 'first_name',
 	    'Last Name': 'last_name',
 	    'Email': 'email',
 	    'Company': 'company',
 	    'Title': 'title',
-	    'Ad': 'linkedInAd',
+	    'Ad': 'ad',
 	    'Vertical': 'vertical'
 	  };
 	}
