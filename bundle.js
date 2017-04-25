@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
@@ -57,21 +57,18 @@
 	  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	    if (message.profiles) {
 	      profiles = message.profiles;
-	      adURL = profiles[0];
-	      console.log(adURL);
-	      debugger;
+	      setStatus("Fetching profile information");
 	      for (var i = 1; i < profiles.length; i++) {
 	        getProfile(profiles[i]);
 	      }
-	    } else {
-	      console.log('returned from getProfile');
-	      console.log(message.contact);
+	    } else if (message.contact) {
 	      contacts.push(merge(message.contact, { vertical: vertical, ad: adURL }));
-	      console.log(contacts);
 	      if (contacts.length === profiles.length) {
-	        debugger;
+	        setStatus("Writing to CSV");
 	        writeToCSV();
 	      }
+	    } else {
+	      console.log(message);
 	    }
 	  });
 	
@@ -80,7 +77,7 @@
 	
 	function runScrape() {
 	  var vertical = document.getElementById('vertical-input').value;
-	
+	  setStatus("Retrieving likers from page");
 	  getProfiles();
 	}
 	
@@ -95,7 +92,7 @@
 	  //create blank tab, executeScript, closetab
 	  chrome.tabs.create({ url: url, active: false }, function (tab) {
 	    chrome.tabs.executeScript(tab.id, { file: "./lib/jquery-3.1.1.min.js" }, function () {
-	      chrome.tabs.executeScript(tab.id, { file: "./lib/pullInfoFromPageProfile.js" }, function (tab) {
+	      chrome.tabs.executeScript(tab.id, { file: "./lib/pullInfoFromPageProfile.js" }, function () {
 	        return chrome.tabs.remove(tab.id);
 	      });
 	    });
@@ -146,11 +143,16 @@
 	  downloadLink.setAttribute('href', data);
 	  downloadLink.setAttribute('download', filename);
 	  downloadLink.click();
+	  setStatus("completed");
+	}
+	
+	function setStatus(status) {
+	  document.getElementById("status").innerText = status;
 	}
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, module) {/**
 	 * lodash (Custom Build) <https://lodash.com/>
@@ -2362,9 +2364,9 @@
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(2)(module)))
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = function(module) {
 		if(!module.webpackPolyfill) {
@@ -2378,6 +2380,6 @@
 	}
 
 
-/***/ }
+/***/ })
 /******/ ]);
 //# sourceMappingURL=bundle.js.map
