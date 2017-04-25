@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "scrape",
-  "description": "A Chrome extension that scrapes linkedin profile info",
+  "description": "A Chrome extension that scrapes profile info",
   "version": "1.0",
 
   "browser_action": {

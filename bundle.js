@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
@@ -57,18 +57,17 @@
 	  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	    if (message.profiles) {
 	      profiles = message.profiles;
+	      adURL = profiles[0];
 	      setStatus("Fetching profile information");
 	      for (var i = 1; i < profiles.length; i++) {
 	        getProfile(profiles[i]);
 	      }
 	    } else if (message.contact) {
 	      contacts.push(merge(message.contact, { vertical: vertical, ad: adURL }));
-	      if (contacts.length === profiles.length) {
+	      if (contacts.length === profiles.length - 1) {
 	        setStatus("Writing to CSV");
 	        writeToCSV();
 	      }
-	    } else {
-	      console.log(message);
 	    }
 	  });
 	
@@ -76,7 +75,7 @@
 	});
 	
 	function runScrape() {
-	  var vertical = document.getElementById('vertical-input').value;
+	  vertical = document.getElementById('vertical-input').value;
 	  setStatus("Retrieving likers from page");
 	  getProfiles();
 	}
@@ -101,17 +100,18 @@
 	
 	function convertToCSV() {
 	  if (contacts.length === 0) {
+	    setStatus("Error getting profile information");
 	    return null;
 	  }
 	
 	  var cToK = columnToKeyMap();
 	
-	  var headers = ['Profile', 'First Name', 'Last Name', 'Email', 'Company', 'Title', 'Ad', 'Vertical'];
+	  var headers = ['\"Profile\"', '\"First Name\"', '\"Last Name\"', '\"Email\"', '\"Company\"', '\"Title\"', '\"Ad\"', '\"Vertical\"'];
 	  var result = headers.join(",") + "\n";
 	  for (var i = 0; i < contacts.length; i++) {
 	    var res = [];
 	    for (var j = 0; j < headers.length; j++) {
-	      res.push(contacts[i][cToK[headers[j]]]);
+	      res.push("\"" + contacts[i][cToK[headers[j]]] + "\"");
 	    }
 	    result += res.join(",") + "\n";
 	  }
@@ -120,28 +120,28 @@
 	
 	function columnToKeyMap() {
 	  return {
-	    'Profile': 'profile_url',
-	    'First Name': 'first_name',
-	    'Last Name': 'last_name',
-	    'Email': 'email',
-	    'Company': 'company',
-	    'Title': 'title',
-	    'Ad': 'ad',
-	    'Vertical': 'vertical'
+	    '\"Profile\"': 'profile_url',
+	    '\"First Name\"': 'first_name',
+	    '\"Last Name\"': 'last_name',
+	    '\"Email\"': 'email',
+	    '\"Company\"': 'company',
+	    '\"Title\"': 'title',
+	    '\"Ad\"': 'ad',
+	    '\"Vertical\"': 'vertical'
 	  };
 	}
 	
 	function writeToCSV() {
 	  var csv = convertToCSV();
-	  console.log(csv);
 	  if (csv === null) {
+	    setStatus("Error creating CSV");
 	    return false;
 	  }
-	  var data = encodeURI('data:text/csv;charset=utf-8' + csv);
+	  var data = encodeURI('data:text/csv;charset=utf-8,' + csv);
 	
 	  var downloadLink = document.createElement('a');
 	  downloadLink.setAttribute('href', data);
-	  downloadLink.setAttribute('download', filename);
+	  downloadLink.setAttribute('download', vertical + "_ad_likers.csv");
 	  downloadLink.click();
 	  setStatus("completed");
 	}
@@ -150,9 +150,9 @@
 	  document.getElementById("status").innerText = status;
 	}
 
-/***/ }),
+/***/ },
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, module) {/**
 	 * lodash (Custom Build) <https://lodash.com/>
@@ -2364,9 +2364,9 @@
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(2)(module)))
 
-/***/ }),
+/***/ },
 /* 2 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	module.exports = function(module) {
 		if(!module.webpackPolyfill) {
@@ -2380,6 +2380,6 @@
 	}
 
 
-/***/ })
+/***/ }
 /******/ ]);
 //# sourceMappingURL=bundle.js.map
