@@ -46,6 +46,10 @@
 
 	"use strict";
 	
+	//TODO automate from campaign manager
+	//TODO push results into google doc
+	
+	//Initialize variables
 	var merge = __webpack_require__(1);
 	var contacts = [];
 	var profiles = [];
@@ -55,7 +59,7 @@
 	document.addEventListener("DOMContentLoaded", function () {
 	  //catches message to either get likers profile urls or profile info
 	  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-	    if (message.profiles) {
+	    if (message.campaigns) {} else if (message.advertisements) {} else if (message.profiles) {
 	      profiles = message.profiles;
 	      adURL = profiles[0];
 	      setStatus("Fetching profile information");
@@ -75,15 +79,25 @@
 	});
 	
 	function runScrape() {
-	  vertical = document.getElementById('vertical-input').value;
+	  var button = document.getElementById('extract-description');
+	  button.disabled = true;
+	  button.style.opacity = "0.7";
 	  setStatus("Retrieving likers from page");
 	  getProfiles();
 	}
 	
+	function getVerticalCampaigns() {}
+	
+	function getAdsPerCampaign() {}
+	
 	//content scripts - load jquery then run pullDescription
 	function getProfiles() {
-	  chrome.tabs.executeScript({ file: "./lib/jquery-3.1.1.min.js" }, function () {
-	    chrome.tabs.executeScript({ file: "./lib/pullInfoFromPage.js" });
+	  chrome.tabs.create({ url: url, active: false }, function (tab) {
+	    chrome.tabs.executeScript({ file: "./lib/jquery-3.1.1.min.js" }, function () {
+	      chrome.tabs.executeScript({ file: "./lib/pullLikersFromAdPage.js" }, function () {
+	        return chrome.tabs.remove(tab.id);
+	      });
+	    });
 	  });
 	}
 	
