@@ -42,16 +42,14 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	'use strict';
 	
 	var profileInformation = [];
-	var numLikers = 0;
 	
-	document.addEventListener('DOMContentLoaded', function () {
+	document.addEventListener("DOMContentLoaded", function () {
 	  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-	    console.log(message);
 	    if (message.verticals) {
 	      receiveVerticals(message.verticals);
 	    } else if (message.ads) {
@@ -75,7 +73,7 @@
 	
 	function getVerticals() {
 	  setStatus('Fetching verticals');
-	  chrome.tabs.executeScript({ file: './lib/pullVerticalsFromCampaignManager.js' });
+	  chrome.tabs.executeScript({ file: "./lib/pullVerticals.js" });
 	}
 	
 	function getAds(_ref) {
@@ -84,11 +82,12 @@
 	
 	  setStatus('Fetching ads from ' + verticalTitle);
 	  chrome.tabs.create({ url: url, active: false }, function (tab) {
-	    chrome.tabs.executeScript({
-	      file: './lib/pullAdsFromVertical.js',
-	      code: 'let verticalTitle = ' + verticalTitle + ';'
-	    }, function () {
-	      return chrome.tabs.remove(tab.id);
+	    chrome.tabs.executeScript(tab.id, { code: 'let verticalTitle = \'' + verticalTitle + '\'' }, function () {
+	      chrome.tabs.executeScript(tab.id, { file: './lib/pullAds.js' }, function () {
+	        return setTimeout(function () {
+	          return chrome.tabs.remove(tab.id);
+	        }, 7500);
+	      });
 	    });
 	  });
 	}
@@ -100,11 +99,12 @@
 	
 	  setStatus('Fetching likers from ' + verticalTitle);
 	  chrome.tabs.create({ url: url, active: false }, function (tab) {
-	    chrome.tabs.executeScript({
-	      file: './lib/pullLikersFromAdPage.js',
-	      code: 'let title = {verticalTitle: ' + verticalTitle + ', adTitle: ' + adTitle + '};'
-	    }, function () {
-	      return chrome.tabs.remove(tab.id);
+	    chrome.tabs.executeScript(tab.id, { code: 'let verticalTitle = \'' + verticalTitle + '\'; let adTitle = \'' + adTitle + '\'' }, function () {
+	      chrome.tabs.executeScript(tab.id, { file: './lib/pullLikers.js' }, function () {
+	        return setTimeout(function () {
+	          return chrome.tabs.remove(tab.id);
+	        }, 7500);
+	      });
 	    });
 	  });
 	}
@@ -116,39 +116,58 @@
 	
 	  setStatus('Fetching profile information from ' + verticalTitle);
 	  chrome.tabs.create({ url: url, active: false }, function (tab) {
-	    chrome.tabs.executeScript(tab.id, {
-	      file: './lib/pullInfoFromPageProfile.js',
-	      code: 'let title = {verticalTitle: ' + verticalTitle + ', adTitle: ' + adTitle + '};'
-	    }, function () {
-	      return chrome.tabs.remove(tab.id);
+	    chrome.tabs.executeScript(tab.id, { code: 'let verticalTitle = \'' + verticalTitle + '\'; let adTitle = \'' + adTitle + '\'' }, function () {
+	      chrome.tabs.executeScript(tab.id, { file: './lib/pullProfileInfo.js' }, function () {
+	        return setTimeout(function () {
+	          return chrome.tabs.remove(tab.id);
+	        }, 7500);
+	      });
 	    });
 	  });
 	}
 	
 	function receiveVerticals(verticals) {
-	  console.log('verticals: ' + verticals.length);
-	  console.log(verticals);
+	  numVerticals += verticals.length;
+	
+	  var _loop = function _loop(i) {
+	    setTimeout(function () {
+	      return getAds(verticals[i]);
+	    }, i * 7500);
+	  };
+	
 	  for (var i = 0; i < verticals.length; i++) {
-	    getAds(verticals[i]);
+	    _loop(i);
 	  }
 	}
 	
 	function receiveAds(ads) {
+	  numAds += ads.length;
+	
+	  var _loop2 = function _loop2(i) {
+	    setTimeout(function () {
+	      return getLikers(ads[i]);
+	    }, i * 7500);
+	  };
+	
 	  for (var i = 0; i < ads.length; i++) {
-	    getLikers(ads[i]);
+	    _loop2(i);
 	  }
 	}
 	
 	function receiveLikers(likers) {
-	  numLikers += likers.length;
+	  var _loop3 = function _loop3(i) {
+	    setTimeout(function () {
+	      return getProfile(likers[i]);
+	    }, i * 7500);
+	  };
+	
 	  for (var i = 1; i < likers.length; i++) {
-	    getProfile(likers[i]);
+	    _loop3(i);
 	  }
 	}
 	
 	function receiveProfile(profile) {
 	  profileInformation.push(profile);
-	  console.log('likes: ' + numLikers + '\nprofiles: ' + profileInformation.length);
 	}
 	
 	function writeToCSV() {
@@ -192,17 +211,17 @@
 	
 	function columnToKeyMap() {
 	  return {
-	    '\"Profile\"': 'profile_url',
-	    '\"First Name\"': 'first_name',
-	    '\"Last Name\"': 'last_name',
+	    '\"Profile\"': 'profileURL',
+	    '\"First Name\"': 'firstName',
+	    '\"Last Name\"': 'lastName',
 	    '\"Email\"': 'email',
 	    '\"Company\"': 'company',
 	    '\"Title\"': 'title',
-	    '\"Ad\"': 'ad',
-	    '\"Vertical\"': 'vertical'
+	    '\"Ad\"': 'adTitle',
+	    '\"Vertical\"': 'verticalTitle'
 	  };
 	}
 
-/***/ })
+/***/ }
 /******/ ]);
 //# sourceMappingURL=bundle.js.map
