@@ -3,7 +3,7 @@
 
   "name": "scrape",
   "description": "A Chrome extension that scrapes profile info",
-  "version": "1.0",
+  "version": "1.1",
 
   "browser_action": {
     "default_icon": "./lib/icon.png",
