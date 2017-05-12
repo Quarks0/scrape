@@ -14,8 +14,15 @@
     "activeTab",
     "https://ajax.googleapis.com/",
     "https://*/*",
-    "http://*/*"
+    "http://*/*",
+    "identity"
   ],
+  "oauth2": {
+    "client_id": "14920537923-phb1uov7269lgk1ppmj18uan8g12oelm.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/spreadsheets"
+    ]
+  },
   "background": {
   "scripts": ["bundle.js"],
   "persistent": true
