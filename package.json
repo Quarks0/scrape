@@ -16,6 +16,8 @@
     "es2015"
   ],
   "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-plugin-react": "^7.0.0",
     "json-loader": "^0.5.4",
     "webpack": "^1.15.0"
   },

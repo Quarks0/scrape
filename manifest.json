@@ -18,13 +18,13 @@
     "identity"
   ],
   "oauth2": {
-    "client_id": "14920537923-phb1uov7269lgk1ppmj18uan8g12oelm.apps.googleusercontent.com",
+    "client_id": "14920537923-2in53gvkqopogkev836lgtoudhmmenl8.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/spreadsheets"
     ]
   },
   "background": {
-  "scripts": ["bundle.js"],
+  "scripts": ["jquery-3.2.1.slim.min.js", "bundle.js"],
   "persistent": true
   }
 }
