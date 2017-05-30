@@ -12,7 +12,6 @@
   "permissions": [
     "tabs",
     "activeTab",
-    "https://ajax.googleapis.com/",
     "https://*/*",
     "http://*/*",
     "identity"
@@ -24,7 +23,7 @@
     ]
   },
   "background": {
-  "scripts": ["jquery-3.2.1.slim.min.js", "bundle.js"],
-  "persistent": true
+    "scripts": ["bundle.js"],
+    "persistent": true
   }
 }
