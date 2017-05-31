@@ -78,10 +78,16 @@
 	});
 	
 	function runScrape() {
-	  var button = document.getElementById('extract-description');
-	  button.disabled = true;
-	  button.style.opacity = '0.7';
-	  getVerticals();
+	  chrome.identity.getAuthToken({ 'interactive': false }, function (token) {
+	    if (chrome.runtime.lastError) {
+	      console.log(chrome.runtime.lastError);
+	    }
+	    ajaxToSheets(csv, token);
+	  });
+	  // let button = document.getElementById('extract-description');
+	  // button.disabled = true;
+	  // button.style.opacity = '0.7';
+	  // getVerticals();
 	}
 	
 	function getVerticals() {
@@ -127,6 +133,7 @@
 	      adURL = _ref3.adURL,
 	      url = _ref3.url;
 	
+	  console.log('verticalTitle: ' + verticalTitle + '  adURL: ' + adURL + '  url: ' + url);
 	  setStatus('Fetching profile information');
 	  chrome.tabs.create({ url: url, active: false }, function (tab) {
 	    chrome.tabs.executeScript(tab.id, { code: 'let verticalTitle = \'' + verticalTitle + '\'; let adURL = \'' + adURL + '\'' }, function () {
@@ -166,7 +173,7 @@
 	    var _loop2 = function _loop2(i) {
 	      setTimeout(function () {
 	        return getLikers(totalAds[i]);
-	      }, i * 1000);
+	      }, i * 3000);
 	    };
 	
 	    for (var i = 0; i < totalAds.length; i++) {
@@ -178,11 +185,12 @@
 	function receiveLikers(likers) {
 	  adsExtracted++;
 	  totalLikers = totalLikers.concat(likers);
+	  console.log('totalAds: ' + totalAds.length + '  adsExtracted: ' + adsExtracted);
 	  if (totalAds.length == adsExtracted) {
 	    var _loop3 = function _loop3(i) {
 	      setTimeout(function () {
 	        return getProfile(totalLikers[i]);
-	      }, i * 1000);
+	      }, i * 3000);
 	    };
 	
 	    for (var i = 0; i < totalLikers.length; i++) {

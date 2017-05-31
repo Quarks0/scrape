@@ -4,7 +4,6 @@
   "name": "scrape",
   "description": "A Chrome extension that scrapes profile info",
   "version": "1.1",
-
   "browser_action": {
     "default_icon": "./lib/icon.png",
     "default_popup": "./lib/scrape.html"
@@ -17,7 +16,7 @@
     "identity"
   ],
   "oauth2": {
-    "client_id": "14920537923-2in53gvkqopogkev836lgtoudhmmenl8.apps.googleusercontent.com",
+    "client_id": "14920537923-rlith05ejd3gvr0vegdt6b2crje2q0k6.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/spreadsheets"
     ]
